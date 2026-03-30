@@ -86,12 +86,13 @@ color: #6b7280;
 
 <h1>💰 أسعار الدولار والذهب</h1>
 
-<!-- 🔽 قسم واحد -->
+<!-- 🔽 زر -->
 <div class="section-title" onclick="toggle()">
-<span>عرض الأسعار</span>
-<span id="arrow">▼</span>
+<span>عرض / إخفاء الأسعار</span>
+<span id="arrow">▲</span>
 </div>
 
+<!-- المحتوى -->
 <div id="content"></div>
 
 </div>
@@ -143,20 +144,22 @@ ${item.type === "usd" ? '<img class="flag" src="https://flagcdn.com/w40/iq.png">
 document.getElementById("content").innerHTML = html;
 }
 
-// 🔽 فتح / غلق
+// 🔽 فتح / غلق فقط (بدون render)
 function toggle() {
 let el = document.getElementById("content");
 let arrow = document.getElementById("arrow");
 
-if (el.style.display === "none" || el.style.display === "") {
+if (el.style.display === "none") {
 el.style.display = "block";
 arrow.innerText = "▲";
-render();
 } else {
 el.style.display = "none";
 arrow.innerText = "▼";
 }
 }
+
+// 🔥 تشغيل أولي
+render();
 
 </script>
 
