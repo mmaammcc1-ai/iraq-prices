@@ -1,40 +1,142 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dollar and Gold Prices in Iraq Today</title>
+<title>أسعار الدولار والذهب في العراق</title>
 
 <style>
 body {
- margin: 0;
- font-family: Arial;
- background: #f3f4f6;
+margin: 0;
+font-family: "Tahoma";
+background: #f3f4f6;
+direction: rtl;
 }
 
-/* Container */
 .container {
- max-width: 600px;
- margin: auto;
- padding: 15px;
- padding-bottom: 80px;
+max-width: 600px;
+margin: auto;
+padding: 15px;
 }
 
-/* Cards */
+h1 {
+text-align: center;
+margin-bottom: 20px;
+}
+
+/* 💳 Card */
 .card {
- background: white;
- border-radius: 15px;
- padding: 15px;
- margin-bottom: 10px;
- display: flex;
- justify-content: space-between;
- align-items: center;
- box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+background: #fff;
+border-radius: 18px;
+padding: 15px;
+margin-bottom: 12px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+box-shadow: 0 6px 15px rgba(0,0,0,0.08);
 }
 
-.price-box {
- background: #ff5a5a;
- color: white;
+.price-red {
+background: #ff5a5a;
+color: white;
+padding: 10px 16px;
+border-radius: 12px;
+font-weight: bold;
+}
+
+.price-gold {
+background: #fbbf24;
+color: black;
+padding: 10px 16px;
+border-radius: 12px;
+font-weight: bold;
+}
+
+.city {
+display: flex;
+align-items: center;
+gap: 8px;
+}
+
+.flag {
+width: 24px;
+}
+
+.arrow {
+color: #6b7280;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>💰 أسعار الدولار والذهب</h1>
+
+<!-- 💵 الدولار -->
+<div id="list"></div>
+
+</div>
+
+<script>
+
+let data = [
+
+// 💵 الدولار
+{type:"usd", name:"بغداد", price:"155,354 د.ع"},
+{type:"usd", name:"البصرة", price:"155,820 د.ع"},
+{type:"usd", name:"أربيل", price:"155,412 د.ع"},
+{type:"usd", name:"كركوك", price:"156,283 د.ع"},
+{type:"usd", name:"السليمانية", price:"155,266 د.ع"},
+{type:"usd", name:"دهوك", price:"156,198 د.ع"},
+
+// 🪙 الذهب
+{type:"gold", name:"الذهب عيار 24", price:"1,135,000 د.ع"},
+{type:"gold", name:"الذهب عيار 22", price:"1,040,000 د.ع"},
+{type:"gold", name:"الذهب عيار 21", price:"994,000 د.ع"},
+{type:"gold", name:"الذهب عيار 18", price:"853,000 د.ع"},
+{type:"gold", name:"أونصة الذهب", price:"$4,519"},
+{type:"gold", name:"كيلو الذهب", price:"$145,284"},
+{type:"gold", name:"أونصة فضة", price:"$71"},
+{type:"gold", name:"كيلو فضة", price:"$2,273"}
+
+];
+
+function render() {
+let html = "";
+
+data.forEach(item => {
+let priceClass = item.type === "usd" ? "price-red" : "price-gold";
+
+html += `
+<div class="card">
+<div class="arrow">▼</div>
+
+<div class="${priceClass}">
+${item.price}
+</div>
+
+<div>${item.type === "usd" ? "100$" : "1 مثقال"}</div>
+
+<div class="city">
+<span>${item.name}</span>
+${item.type === "usd" ? '<img class="flag" src="https://flagcdn.com/w40/iq.png">' : ""}
+</div>
+</div>
+`;
+});
+
+document.getElementById("list").innerHTML = html;
+}
+
+render();
+
+</script>
+
+</body>
+</html> color: white;
  padding: 8px 15px;
  border-radius: 12px;
  font-weight: bold;
