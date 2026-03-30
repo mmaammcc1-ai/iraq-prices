@@ -23,19 +23,7 @@ h1 {
 text-align: center;
 }
 
-/* 🔽 العنوان */
-.section-title {
-background: #fff;
-padding: 12px;
-border-radius: 12px;
-margin: 15px 0;
-cursor: pointer;
-display: flex;
-justify-content: space-between;
-box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-}
-
-/* 💳 الكروت */
+/* الكروت */
 .card {
 background: #fff;
 border-radius: 18px;
@@ -73,8 +61,27 @@ gap: 8px;
 width: 24px;
 }
 
-.arrow {
-color: #6b7280;
+/* زر */
+button {
+width: 100%;
+padding: 12px;
+border: none;
+background: #2563eb;
+color: white;
+border-radius: 12px;
+cursor: pointer;
+margin: 10px 0;
+}
+
+/* زر الذهب */
+.toggle-gold {
+background: #fff;
+padding: 12px;
+border-radius: 12px;
+text-align: center;
+cursor: pointer;
+box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+margin: 15px 0;
 }
 </style>
 
@@ -84,82 +91,92 @@ color: #6b7280;
 
 <div class="container">
 
-<h1>💰 أسعار الدولار والذهب</h1>
+<h1> أسعار الدولار والذهب</h1>
 
-<!-- 🔽 زر -->
-<div class="section-title" onclick="toggle()">
-<span>عرض / إخفاء الأسعار</span>
-<span id="arrow">▲</span>
-</div>
+<!-- الدولار (يظهر مباشرة) --><div id="usd"></div>
 
-<!-- المحتوى -->
-<div id="content"></div>
+<button onclick="update()"> تحديث الأسعار</button>
+
+<!-- زر الذهب -->
+<div class="toggle-gold" onclick="toggleGold()">عرض أسعار الذهب ▼</div>
+
+<!-- الذهب -->
+<div id="gold" style="display:none;"></div>
 
 </div>
 
 <script>
 
-let data = [
-
-// 💵 الدولار
-{type:"usd", name:"بغداد", price:"155,354 د.ع"},
-{type:"usd", name:"البصرة", price:"155,820 د.ع"},
-{type:"usd", name:"أربيل", price:"155,412 د.ع"},
-{type:"usd", name:"كركوك", price:"156,283 د.ع"},
-{type:"usd", name:"السليمانية", price:"155,266 د.ع"},
-{type:"usd", name:"دهوك", price:"156,198 د.ع"},
-
-// 🪙 الذهب
-{type:"gold", name:"الذهب عيار 24", price:"1,135,000 د.ع"},
-{type:"gold", name:"الذهب عيار 22", price:"1,040,000 د.ع"},
-{type:"gold", name:"الذهب عيار 21", price:"994,000 د.ع"},
-{type:"gold", name:"الذهب عيار 18", price:"853,000 د.ع"},
-{type:"gold", name:"أونصة الذهب", price:"$4,519"},
-{type:"gold", name:"كيلو الذهب", price:"$145,284"},
-{type:"gold", name:"أونصة فضة", price:"$71"},
-{type:"gold", name:"كيلو فضة", price:"$2,273"}
-
+// الدولارlet usd = [
+{name:"بغداد", price:155354},
+{name:"البصرة", price:155820},
+{name:"أربيل", price:155412},
+{name:"كركوك", price:156283},{name:"السليمانية", price:155266},{name:"دهوك", price:156198},
 ];
 
-// 🎨 عرض البيانات
-function render() {
+// الذهبlet gold = [
+{name:"الذهب عيار 24", price:"1,135,000 د.ع"},
+{name:"الذهب عيار 22", price:"1,040,000 د.ع"},
+{name:"الذهب عيار 21", price:"994,000 د.ع"},
+{name:"الذهب عيار 18", price:"853,000 د.ع"},
+];
+
+// عرض الدولارfunction renderUSD() {
 let html = "";
 
-data.forEach(item => {
-let priceClass = item.type === "usd" ? "price-red" : "price-gold";
-
+usd.forEach(item => {
 html += `
 <div class="card">
-<div class="arrow">▼</div>
-<div class="${priceClass}">${item.price}</div>
-<div>${item.type === "usd" ? "100$" : "1 مثقال"}</div>
+<div class="price-red">${item.price.toLocaleString()} د.ع</div>
+<div>100$</div>
 <div class="city">
 <span>${item.name}</span>
-${item.type === "usd" ? '<img class="flag" src="https://flagcdn.com/w40/iq.png">' : ""}
+<img class="flag" src="https://flagcdn.com/w40/iq.png">
 </div>
 </div>
 `;
 });
 
-document.getElementById("content").innerHTML = html;
+document.getElementById("usd").innerHTML = html;
 }
 
-// 🔽 فتح / غلق فقط (بدون render)
-function toggle() {
-let el = document.getElementById("content");
-let arrow = document.getElementById("arrow");
+// عرض الذهبfunction renderGold() {
+let html = "";
 
-if (el.style.display === "none") {
-el.style.display = "block";
-arrow.innerText = "▲";
+gold.forEach(item => {
+html += `
+<div class="card">
+<div class="price-gold">${item.price}</div>
+<div>1 مثقال</div>
+<div class="city">
+<span>${item.name}</span>
+</div>
+</div>
+`;
+});
+
+document.getElementById("gold").innerHTML = html;
+}
+
+// زر الذهبfunction toggleGold() {
+let g = document.getElementById("gold");
+
+if (g.style.display === "none") {
+renderGold();
+g.style.display = "block";
 } else {
-el.style.display = "none";
-arrow.innerText = "▼";
+g.style.display = "none";
 }
 }
 
-// 🔥 تشغيل أولي
-render();
+// تحديث الأسعارfunction update() {
+usd.forEach(item => {
+item.price += Math.floor(Math.random() * 300 - 150);
+});
+renderUSD();
+}
+
+// تشغيل أوليrenderUSD();
 
 </script>
 
