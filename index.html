@@ -1,37 +1,15 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>أسعار الدولار والذهب في العراق</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dollar and Gold Prices in Iraq Today</title>
+
 <style>
 body {
  margin: 0;
  font-family: Arial;
  background: #f3f4f6;
- direction: rtl;
-}
-
-/* Navbar */
-.nav {
- background: #4f46e5;
- padding: 15px 10px;
- color: white;
-}
-
-.tabs {
- display: flex;
- justify-content: space-around;
- font-size: 14px;
-}
-
-.tab {
- cursor: pointer;
- opacity: 0.7;
-}
-
-.tab.active {
- opacity: 1;
- font-weight: bold;
 }
 
 /* Container */
@@ -39,6 +17,7 @@ body {
  max-width: 600px;
  margin: auto;
  padding: 15px;
+ padding-bottom: 80px;
 }
 
 /* Cards */
@@ -83,10 +62,157 @@ button {
  margin-top: 10px;
 }
 
+/* Bottom Nav */
+.bottom-nav {
+ position: fixed;
+ bottom: 0;
+ width: 100%;
+ background: #4f46e5;
+ display: flex;
+ justify-content: space-around;
+ padding: 10px 0;
+ color: white;
+}
+
+.nav-item {
+ text-align: center;
+ font-size: 14px;
+ opacity: 0.7;
+ cursor: pointer;
+}
+
+.nav-item.active {
+ opacity: 1;
+ font-weight: bold;
+}
+
 /* Converter */
 .converter {
  background: white;
  padding: 15px;
+ border-radius: 15px;
+}
+
+input {
+ width: 100%;
+ padding: 10px;
+ margin: 10px 0;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+ <!-- USD -->
+ <div id="usd">
+ <h2> USD Prices</h2>
+ <div id="usdList"></div>
+ <button onclick="updateUSD()"> Update Prices</button>
+ </div>
+
+ <!-- GOLD -->
+ <div id="gold" style="display:none;">
+ <h2> Gold Prices</h2>
+
+ <div class="card">
+ <div class="price-box">95,000 IQD</div>
+ <div>18K</div>
+ </div>
+
+ <div class="card">
+ <div class="price-box">110,000 IQD</div>
+ <div>21K</div>
+ </div>
+
+ <div class="card">
+ <div class="price-box">125,000 IQD</div>
+ <div>24K</div>
+ </div>
+ </div>
+
+ <!-- EXCHANGE -->
+ <div id="exchange" style="display:none;">
+ <h2> Exchange</h2>
+
+ <div class="converter">
+ <input type="number" id="amount" placeholder="Enter USD amount">
+ <button onclick="convert()">Convert</button>
+ <p id="result"></p>
+ </div>
+ </div>
+
+</div>
+
+<!-- Bottom Navigation -->
+<div class="bottom-nav">
+ <div class="nav-item active" onclick="showTab('usd', this)"> <br>USD</div>
+ <div class="nav-item" onclick="showTab('gold', this)"> <br>Gold</div>
+ <div class="nav-item" onclick="showTab('exchange', this)"> <br>Exchange</div>
+</div>
+
+<script>
+
+let usdData = [
+ {city: "Baghdad", price: 155354},
+ {city: "Basra", price: 155820},
+ {city: "Erbil", price: 155412},
+ {city: "Kirkuk", price: 156283},
+ {city: "Sulaymaniyah", price: 155266},
+ {city: "Duhok", price: 156198},
+];
+
+function renderUSD() {
+ let html = "";
+ usdData.forEach(item => {
+ html += `
+ <div class="card">
+ <div class="price-box">${item.price.toLocaleString()} IQD</div>
+ <div>100$</div>
+ <div class="city">
+ <span>${item.city}</span>
+ <img class="flag" src="https://flagcdn.com/w40/iq.png">
+ </div>
+ </div>
+ `;
+ });
+ document.getElementById("usdList").innerHTML = html;
+}
+
+function updateUSD() {
+ usdData.forEach(item => {
+ item.price += Math.floor(Math.random() * 300 - 150);
+ });
+ renderUSD();
+}
+
+function convert() {
+ let amount = document.getElementById("amount").value;
+ let rate = 155000;
+ let result = amount * rate / 100;
+ document.getElementById("result").innerText =
+ "≈ " + result.toLocaleString() + " IQD";
+}
+
+function showTab(tab, el) {
+ document.getElementById("usd").style.display = "none";
+ document.getElementById("gold").style.display = "none";
+ document.getElementById("exchange").style.display = "none";
+
+ document.getElementById(tab).style.display = "block";
+
+ document.querySelectorAll(".nav-item").forEach(i => i.classList.remove("active"));
+ el.classList.add("active");
+}
+
+renderUSD();
+
+</script>
+
+</body>
+</html> padding: 15px;
  border-radius: 15px;
  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
 }
