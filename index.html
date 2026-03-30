@@ -1,108 +1,494 @@
--digit', minute: '2-digit', second: '2-digit' });
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Dollar and Gold Prices in Iraq Today</title>
+    <meta name="description" content="Check the latest continuous updates for USD to IQD exchange rates and Gold prices across various cities in Iraq.">
+    <style>
+        /* === Variables === */
+        :root {
+            --bg-color: #f5f7fa;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --text-secondary: #7f8c8d;
+            --red-box: #e74c3c;
+            --blue-btn: #3498db;
+            --nav-bg: #ffffff;
+            --nav-active: #3498db;
+            --nav-inactive: #95a5a6;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            --border-radius: 16px;
+            --transition: 0.3s ease-in-out;
+        }
+
+        /* === Base Styles === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding-bottom: 80px; /* Space for bottom nav */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* === Header === */
+        header {
+            background-color: var(--card-bg);
+            padding: 20px 16px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        header h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        #last-updated {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* === Main Content Area === */
+        main {
+            flex: 1;
+            padding: 16px;
+            max-width: 600px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* === Sections === */
+        .section {
+            display: none;
+            animation: fadeIn var(--transition);
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* === Cards === */
+        .card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s ease;
+        }
+
+        .card:active {
+            transform: scale(0.98);
+        }
+
+        .card-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .flag {
+            font-size: 1.8rem;
+        }
+
+        .details h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .details p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* === Price Box === */
+        .price-box {
+            background-color: var(--red-box);
+            color: #ffffff;
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1rem;
+            box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3);
+            transition: transform 0.2s ease;
+        }
+
+        /* === Buttons === */
+        .btn {
+            background-color: var(--blue-btn);
+            color: #ffffff;
+            border: none;
+            width: 100%;
+            padding: 16px;
+            border-radius: var(--border-radius);
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+            transition: background-color 0.2s, transform 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        /* === Exchange Section === */
+        .exchange-container {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .input-group label {
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .input-group input {
+            padding: 16px;
+            border: 2px solid #ecf0f1;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            outline: none;
+            transition: border-color var(--transition);
+        }
+
+        .input-group input:focus {
+            border-color: var(--blue-btn);
+        }
+
+        .result-container {
+            background-color: #f8f9fa;
+            border: 2px dashed #bdc3c7;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .result-label {
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .result-container .price-box {
+            display: inline-block;
+            font-size: 1.2rem;
+            padding: 10px 20px;
+        }
+
+        /* === Bottom Navigation === */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: var(--nav-bg);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            padding-bottom: calc(12px + env(safe-area-inset-bottom));
+            box-shadow: 0 -2px 15px rgba(0,0,0,0.05);
+            z-index: 100;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            color: var(--nav-inactive);
+            cursor: pointer;
+            transition: color var(--transition);
+            width: 30%;
+        }
+
+        .nav-item.active {
+            color: var(--nav-active);
+        }
+
+        .nav-icon {
+            font-size: 1.4rem;
+        }
+
+        .nav-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <h1>Market Rates Today</h1>
+        <p id="last-updated">Updating...</p>
+    </header>
+
+    <!-- Main Content Area -->
+    <main>
+        
+        <!-- === USD Section === -->
+        <section id="usd-section" class="section active">
+            <div id="usd-cards">
+                <!-- USD Cards will be injected here via JS -->
+            </div>
+            <button class="btn" id="update-btn" onclick="triggerUpdate()">Update Prices</button>
+        </section>
+
+        <!-- === Gold Section === -->
+        <section id="gold-section" class="section">
+            <div id="gold-cards">
+                <!-- Gold Cards will be injected here via JS -->
+            </div>
+        </section>
+
+        <!-- === Exchange Section === -->
+        <section id="exchange-section" class="section">
+            <div class="card exchange-container">
+                <div class="input-group">
+                    <label for="usd-amount">Amount in USD ($)</label>
+                    <input type="number" id="usd-amount" placeholder="e.g. 100" min="1" value="100">
+                </div>
+                
+                <button class="btn" onclick="calculateExchange()">Convert to IQD</button>
+
+                <div class="result-container">
+                    <p class="result-label">Result in Iraqi Dinar (Baghdad Rate)</p>
+                    <div class="price-box" id="exchange-result">0 IQD</div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="bottom-nav">
+        <div class="nav-item active" onclick="switchTab('usd', this)">
+            <span class="nav-icon">💵</span>
+            <span class="nav-label">Dollar</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('gold', this)">
+            <span class="nav-icon">🪙</span>
+            <span class="nav-label">Gold</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('exchange', this)">
+            <span class="nav-icon">💱</span>
+            <span class="nav-label">Exchange</span>
+        </div>
+    </nav>
+
+    <script>
+        // === Data Storage ===
+        // Note: USD Prices are based on per $100
+        const usdData = [
+            { id: 'baghdad', city: 'Baghdad', flag: '🇮🇶', price: 152000, label: '100$' },
+            { id: 'basra', city: 'Basra', flag: '🇮🇶', price: 152500, label: '100$' },
+            { id: 'erbil', city: 'Erbil', flag: '🇮🇶', price: 151500, label: '100$' },
+            { id: 'kirkuk', city: 'Kirkuk', flag: '🇮🇶', price: 151750, label: '100$' },
+            { id: 'sulaymaniyah', city: 'Sulaymaniyah', flag: '🇮🇶', price: 151600, label: '100$' },
+            { id: 'duhok', city: 'Duhok', flag: '🇮🇶', price: 151400, label: '100$' }
+        ];
+
+        const goldData = [
+            { id: '18k', type: '18K Gold', unit: 'Per Mithqal', price: 405000 },
+            { id: '21k', type: '21K Gold', unit: 'Per Mithqal', price: 472000 },
+            { id: '24k', type: '24K Gold', unit: 'Per Mithqal', price: 540000 }
+        ];
+
+        // === Utility Functions ===
+        // Format numbers with commas (e.g., 150,000)
+        const formatNumber = (num) => {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        };
+
+        // Update the timestamp in the header
+        const updateTime = () => {
+            const now = new Date();
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            
+            hours = hours % 12;
+            hours = hours ? hours : 12; // 0 should be 12
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            
+            const timeString = `${hours}:${minutes} ${ampm}`;
             document.getElementById('last-updated').innerText = `Last updated: ${timeString}`;
         };
 
-        // Update Prices Logic
-        const updatePrices = () => {
+        // === Rendering Functions ===
+        const renderUSD = () => {
+            const container = document.getElementById('usd-cards');
+            container.innerHTML = usdData.map(item => `
+                <div class="card">
+                    <div class="card-info">
+                        <span class="flag">${item.flag}</span>
+                        <div class="details">
+                            <h2>${item.city}</h2>
+                            <p>${item.label}</p>
+                        </div>
+                    </div>
+                    <div class="price-box" id="price-${item.id}">
+                        ${formatNumber(item.price)} IQD
+                    </div>
+                </div>
+            `).join('');
+        };
+
+        const renderGold = () => {
+            const container = document.getElementById('gold-cards');
+            container.innerHTML = goldData.map(item => `
+                <div class="card">
+                    <div class="card-info">
+                        <div class="details">
+                            <h2>${item.type}</h2>
+                            <p>${item.unit}</p>
+                        </div>
+                    </div>
+                    <div class="price-box">
+                        ${formatNumber(item.price)} IQD
+                    </div>
+                </div>
+            `).join('');
+        };
+
+        // === Interaction Logic ===
+
+        // Switch between tabs
+        window.switchTab = (tabName, element) => {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(sec => {
+                sec.classList.remove('active');
+            });
+            // Remove active class from all nav items
+            document.querySelectorAll('.nav-item').forEach(nav => {
+                nav.classList.remove('active');
+            });
+
+            // Show selected section
+            document.getElementById(`${tabName}-section`).classList.add('active');
+            // Highlight selected nav item
+            element.classList.add('active');
+        };
+
+        // Update Prices with animation and randomness
+        window.triggerUpdate = () => {
             const btn = document.getElementById('update-btn');
-            const spinner = document.getElementById('update-spinner');
-            const text = document.getElementById('update-text');
-
-            // Show loading state
+            
+            // Set loading state
+            btn.innerHTML = 'Updating...';
             btn.disabled = true;
-            spinner.style.display = 'block';
-            text.innerText = 'Updating...';
 
+            // Simulate network request delay
             setTimeout(() => {
-                // Randomly change prices
+                // Randomize prices slightly for demonstration
                 usdData.forEach(item => {
-                    // Random change between -500 and +500 step 50
+                    // Random change between -500 and +500 in increments of 50
                     const change = (Math.floor(Math.random() * 21) - 10) * 50;
                     item.price += change;
                     
-                    // Update DOM element directly or re-render
-                    const priceElement = document.getElementById(`price-${item.id}`);
-                    if (priceElement) {
-                        priceElement.innerText = `${formatNumber(item.price)} IQD`;
+                    // Update DOM and apply pop animation
+                    const priceBox = document.getElementById(`price-${item.id}`);
+                    if (priceBox) {
+                        priceBox.innerText = `${formatNumber(item.price)} IQD`;
                         
-                        // Small animation for update
-                        priceElement.style.transform = 'scale(1.1)';
-                        setTimeout(() => priceElement.style.transform = 'scale(1)', 200);
+                        // Add animation effect
+                        priceBox.style.transform = 'scale(1.1)';
+                        setTimeout(() => {
+                            priceBox.style.transform = 'scale(1)';
+                        }, 200);
                     }
                 });
 
-                // Gold prices
-                goldData.forEach(item => {
-                    const change = (Math.floor(Math.random() * 11) - 5) * 1000;
-                    item.price += change;
-                    const priceElement = document.getElementById(`gold-${item.id}`);
-                    if (priceElement) {
-                        priceElement.innerText = `${formatNumber(item.price)} IQD`;
-                        priceElement.style.transform = 'scale(1.1)';
-                        setTimeout(() => priceElement.style.transform = 'scale(1)', 200);
-                    }
-                });
-
+                // Update timestamp
                 updateTime();
                 
+                // If the exchange result is relying on Baghdad price, recalculate it
+                calculateExchange();
+
                 // Reset button state
+                btn.innerHTML = 'Update Prices';
                 btn.disabled = false;
-                spinner.style.display = 'none';
-                text.innerText = 'Update Prices';
-                
-                // Also update conversion if needed
-                convertCurrency();
-
-            }, 800); // Simulate network delay
+            }, 800);
         };
 
-        // Tab Navigation Logic
-        window.switchTab = (tabName, element) => {
-            // Remove active class from all sections and tabs
-            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-
-            // Add active class to selected
-            document.getElementById(`${tabName}-section`).classList.add('active');
-            element.classList.add('active');
-            
-            // Re-calculate conversion if switching to exchange tab
-            if(tabName === 'exchange') {
-                convertCurrency();
-            }
-        };
-
-        // Currency Converter Logic
-        window.convertCurrency = () => {
-            const amountInput = document.getElementById('usd-amount').value;
-            const amount = parseFloat(amountInput);
+        // Currency Exchange Calculator
+        window.calculateExchange = () => {
+            const input = document.getElementById('usd-amount').value;
+            const amount = parseFloat(input);
             const resultBox = document.getElementById('exchange-result');
 
-            if (isNaN(amount) || amount <= 0) {
+            if (isNaN(amount) || amount < 0) {
                 resultBox.innerText = '0 IQD';
                 return;
             }
 
-            // Use Baghdad price as base for exchange
-            const baseRate = usdData.find(item => item.id === 'baghdad').price;
+            // Find base rate (Baghdad per $100)
+            const baghdadRate = usdData.find(city => city.id === 'baghdad').price;
             
-            // baseRate is for $100
-            const ratePerDollar = baseRate / 100;
-            const converted = Math.round(amount * ratePerDollar);
+            // Calculate rate per 1 USD
+            const unitRate = baghdadRate / 100;
+            const finalResult = amount * unitRate;
 
-            resultBox.innerText = `${formatNumber(converted)} IQD`;
+            resultBox.innerText = `${formatNumber(Math.round(finalResult))} IQD`;
+            
+            // Small animation on result update
+            resultBox.style.transform = 'scale(1.05)';
+            setTimeout(() => {
+                resultBox.style.transform = 'scale(1)';
+            }, 200);
         };
 
-        // Initialization
-        const init = () => {
+        // === Initialization ===
+        const initApp = () => {
             renderUSD();
             renderGold();
             updateTime();
-            convertCurrency();
+            calculateExchange(); // Calculate initial value (100$)
         };
 
-        // Run on load
-        window.onload = init;
+        // Start app slightly after load to ensure smooth parsing
+        window.onload = initApp;
 
     </script>
 </body>
