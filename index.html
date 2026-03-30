@@ -7,83 +7,82 @@
 
 <style>
 body {
- margin: 0;
- font-family: "Tahoma";
- background: #f3f4f6;
- direction: rtl;
+margin: 0;
+font-family: "Tahoma";
+background: #f3f4f6;
+direction: rtl;
 }
 
 .container {
- max-width: 600px;
- margin: auto;
- padding: 15px;
+max-width: 600px;
+margin: auto;
+padding: 15px;
 }
 
 h1 {
- text-align: center;
+text-align: center;
 }
 
-/* Card */
+/* الكروت */
 .card {
- background: #fff;
- border-radius: 18px;
- padding: 15px;
- margin-bottom: 12px;
- display: flex;
- justify-content: space-between;
- align-items: center;
- box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+background: #fff;
+border-radius: 18px;
+padding: 15px;
+margin-bottom: 12px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+box-shadow: 0 6px 15px rgba(0,0,0,0.08);
 }
 
 .price-red {
- background: #ff5a5a;
- color: white;
- padding: 10px 16px;
- border-radius: 12px;
- font-weight: bold;
+background: #ff5a5a;
+color: white;
+padding: 10px 16px;
+border-radius: 12px;
+font-weight: bold;
 }
 
 .price-gold {
- background: #fbbf24;
- color: black;
- padding: 10px 16px;
- border-radius: 12px;
- font-weight: bold;
+background: #fbbf24;
+color: black;
+padding: 10px 16px;
+border-radius: 12px;
+font-weight: bold;
 }
 
 .city {
- display: flex;
- align-items: center;
- gap: 8px;
+display: flex;
+align-items: center;
+gap: 8px;
 }
 
 .flag {
- width: 24px;
+width: 24px;
 }
 
 /* زر */
 button {
- width: 100%;
- padding: 12px;
- border: none;
- background: #2563eb;
- color: white;
- border-radius: 12px;
- cursor: pointer;
- margin-top: 10px;
+width: 100%;
+padding: 12px;
+border: none;
+background: #2563eb;
+color: white;
+border-radius: 12px;
+cursor: pointer;
+margin: 10px 0;
 }
 
 /* زر الذهب */
 .toggle-gold {
- background: #fff;
- padding: 12px;
- border-radius: 12px;
- margin: 15px 0;
- text-align: center;
- cursor: pointer;
- box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+background: #fff;
+padding: 12px;
+border-radius: 12px;
+text-align: center;
+cursor: pointer;
+box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+margin: 15px 0;
 }
-
 </style>
 
 </head>
@@ -94,87 +93,90 @@ button {
 
 <h1> أسعار الدولار والذهب</h1>
 
-<!-- الدولار -->
-<div id="usdList"></div>
+<!-- الدولار (يظهر مباشرة) --><div id="usd"></div>
 
-<button onclick="updatePrices()"> تحديث الأسعار</button>
+<button onclick="update()"> تحديث الأسعار</button>
 
 <!-- زر الذهب -->
-<div class="toggle-gold" onclick="toggleGold()"> عرض أسعار الذهب ▼</div>
+<div class="toggle-gold" onclick="toggleGold()">عرض أسعار الذهب ▼</div>
 
 <!-- الذهب -->
-<div id="goldList" style="display:none;"></div>
+<div id="gold" style="display:none;"></div>
 
 </div>
 
 <script>
 
-// الدولارlet usdData = [
- {name:"بغداد", price:155354},
- {name:"البصرة", price:155820},
- {name:"أربيل", price:155412},
- {name:"كركوك", price:156283}, {name:"السليمانية", price:155266}, {name:"دهوك", price:156198},
+// الدولارlet usd = [
+{name:"بغداد", price:155354},
+{name:"البصرة", price:155820},
+{name:"أربيل", price:155412},
+{name:"كركوك", price:156283},{name:"السليمانية", price:155266},{name:"دهوك", price:156198},
 ];
 
-// الذهبlet goldData = [
- {name:"الذهب عيار 24", price:"1,135,000 د.ع"},
- {name:"الذهب عيار 22", price:"1,040,000 د.ع"},
- {name:"الذهب عيار 21", price:"994,000 د.ع"},
- {name:"الذهب عيار 18", price:"853,000 د.ع"},
+// الذهبlet gold = [
+{name:"الذهب عيار 24", price:"1,135,000 د.ع"},
+{name:"الذهب عيار 22", price:"1,040,000 د.ع"},
+{name:"الذهب عيار 21", price:"994,000 د.ع"},
+{name:"الذهب عيار 18", price:"853,000 د.ع"},
 ];
 
 // عرض الدولارfunction renderUSD() {
- let html = "";
- usdData.forEach(item => {
- html += `
- <div class="card">
- <div class="price-red">${item.price.toLocaleString()} د.ع</div>
- <div>100$</div>
- <div class="city">
- <span>${item.name}</span>
- <img class="flag" src="https://flagcdn.com/w40/iq.png">
- </div>
- </div>
- `;
- });
- document.getElementById("usdList").innerHTML = html;
+let html = "";
+
+usd.forEach(item => {
+html += `
+<div class="card">
+<div class="price-red">${item.price.toLocaleString()} د.ع</div>
+<div>100$</div>
+<div class="city">
+<span>${item.name}</span>
+<img class="flag" src="https://flagcdn.com/w40/iq.png">
+</div>
+</div>
+`;
+});
+
+document.getElementById("usd").innerHTML = html;
 }
 
 // عرض الذهبfunction renderGold() {
- let html = "";
- goldData.forEach(item => {
- html += `
- <div class="card">
- <div class="price-gold">${item.price}</div>
- <div>1 مثقال</div>
- <div class="city">
- <span>${item.name}</span>
- </div>
- </div>
- `;
- });
- document.getElementById("goldList").innerHTML = html;
+let html = "";
+
+gold.forEach(item => {
+html += `
+<div class="card">
+<div class="price-gold">${item.price}</div>
+<div>1 مثقال</div>
+<div class="city">
+<span>${item.name}</span>
+</div>
+</div>
+`;
+});
+
+document.getElementById("gold").innerHTML = html;
 }
 
-// تحديث الأسعارfunction updatePrices() {
- usdData.forEach(item => {
- item.price += Math.floor(Math.random() * 300 - 150);
- });
- renderUSD();
+// زر الذهبfunction toggleGold() {
+let g = document.getElementById("gold");
+
+if (g.style.display === "none") {
+renderGold();
+g.style.display = "block";
+} else {
+g.style.display = "none";
+}
 }
 
-// فتح/غلق الذهبfunction toggleGold() {
- let el = document.getElementById("goldList");
-
- if (el.style.display === "none") {
- el.style.display = "block";
- renderGold();
- } else {
- el.style.display = "none";
- }
+// تحديث الأسعارfunction update() {
+usd.forEach(item => {
+item.price += Math.floor(Math.random() * 300 - 150);
+});
+renderUSD();
 }
 
-// تحميل أوليrenderUSD();
+// تشغيل أوليrenderUSD();
 
 </script>
 
