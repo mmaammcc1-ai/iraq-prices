@@ -1,557 +1,109 @@
-<!DOCTYPE html>
-<html lang="ar">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>أسعار الدولار والذهب في العراق</title>
+-digit', minute: '2-digit', second: '2-digit' });
+            document.getElementById('last-updated').innerText = `Last updated: ${timeString}`;
+        };
+
+        // Update Prices Logic
+        const updatePrices = () => {
+            const btn = document.getElementById('update-btn');
+            const spinner = document.getElementById('update-spinner');
+            const text = document.getElementById('update-text');
+
+            // Show loading state
+            btn.disabled = true;
+            spinner.style.display = 'block';
+            text.innerText = 'Updating...';
+
+            setTimeout(() => {
+                // Randomly change prices
+                usdData.forEach(item => {
+                    // Random change between -500 and +500 step 50
+                    const change = (Math.floor(Math.random() * 21) - 10) * 50;
+                    item.price += change;
+                    
+                    // Update DOM element directly or re-render
+                    const priceElement = document.getElementById(`price-${item.id}`);
+                    if (priceElement) {
+                        priceElement.innerText = `${formatNumber(item.price)} IQD`;
+                        
+                        // Small animation for update
+                        priceElement.style.transform = 'scale(1.1)';
+                        setTimeout(() => priceElement.style.transform = 'scale(1)', 200);
+                    }
+                });
+
+                // Gold prices
+                goldData.forEach(item => {
+                    const change = (Math.floor(Math.random() * 11) - 5) * 1000;
+                    item.price += change;
+                    const priceElement = document.getElementById(`gold-${item.id}`);
+                    if (priceElement) {
+                        priceElement.innerText = `${formatNumber(item.price)} IQD`;
+                        priceElement.style.transform = 'scale(1.1)';
+                        setTimeout(() => priceElement.style.transform = 'scale(1)', 200);
+                    }
+                });
+
+                updateTime();
+                
+                // Reset button state
+                btn.disabled = false;
+                spinner.style.display = 'none';
+                text.innerText = 'Update Prices';
+                
+                // Also update conversion if needed
+                convertCurrency();
+
+            }, 800); // Simulate network delay
+        };
+
+        // Tab Navigation Logic
+        window.switchTab = (tabName, element) => {
+            // Remove active class from all sections and tabs
+            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+
+            // Add active class to selected
+            document.getElementById(`${tabName}-section`).classList.add('active');
+            element.classList.add('active');
+            
+            // Re-calculate conversion if switching to exchange tab
+            if(tabName === 'exchange') {
+                convertCurrency();
+            }
+        };
+
+        // Currency Converter Logic
+        window.convertCurrency = () => {
+            const amountInput = document.getElementById('usd-amount').value;
+            const amount = parseFloat(amountInput);
+            const resultBox = document.getElementById('exchange-result');
+
+            if (isNaN(amount) || amount <= 0) {
+                resultBox.innerText = '0 IQD';
+                return;
+            }
+
+            // Use Baghdad price as base for exchange
+            const baseRate = usdData.find(item => item.id === 'baghdad').price;
+            
+            // baseRate is for $100
+            const ratePerDollar = baseRate / 100;
+            const converted = Math.round(amount * ratePerDollar);
+
+            resultBox.innerText = `${formatNumber(converted)} IQD`;
+        };
+
+        // Initialization
+        const init = () => {
+            renderUSD();
+            renderGold();
+            updateTime();
+            convertCurrency();
+        };
 
-<style>
-body {
-margin: 0;
-font-family: "Tahoma";
-background: #f3f4f6;
-direction: rtl;
-}
+        // Run on load
+        window.onload = init;
 
-.container {
-max-width: 600px;
-margin: auto;
-padding: 15px;
-}
-
-h1 {
-text-align: center;
-margin-bottom: 20px;
-}
-
-/* 💳 Card */
-.card {
-background: #fff;
-border-radius: 18px;
-padding: 15px;
-margin-bottom: 12px;
-display: flex;
-justify-content: space-between;
-align-items: center;
-box-shadow: 0 6px 15px rgba(0,0,0,0.08);
-}
-
-.price-red {
-background: #ff5a5a;
-color: white;
-padding: 10px 16px;
-border-radius: 12px;
-font-weight: bold;
-}
-
-.price-gold {
-background: #fbbf24;
-color: black;
-padding: 10px 16px;
-border-radius: 12px;
-font-weight: bold;
-}
-
-.city {
-display: flex;
-align-items: center;
-gap: 8px;
-}
-
-.flag {
-width: 24px;
-}
-
-.arrow {
-color: #6b7280;
-}
-</style>
-
-</head>
-
-<body>
-
-<div class="container">
-
-<h1>💰 أسعار الدولار والذهب</h1>
-
-<!-- 💵 الدولار -->
-<div id="list"></div>
-
-</div>
-
-<script>
-
-let data = [
-
-// 💵 الدولار
-{type:"usd", name:"بغداد", price:"155,354 د.ع"},
-{type:"usd", name:"البصرة", price:"155,820 د.ع"},
-{type:"usd", name:"أربيل", price:"155,412 د.ع"},
-{type:"usd", name:"كركوك", price:"156,283 د.ع"},
-{type:"usd", name:"السليمانية", price:"155,266 د.ع"},
-{type:"usd", name:"دهوك", price:"156,198 د.ع"},
-
-// 🪙 الذهب
-{type:"gold", name:"الذهب عيار 24", price:"1,135,000 د.ع"},
-{type:"gold", name:"الذهب عيار 22", price:"1,040,000 د.ع"},
-{type:"gold", name:"الذهب عيار 21", price:"994,000 د.ع"},
-{type:"gold", name:"الذهب عيار 18", price:"853,000 د.ع"},
-{type:"gold", name:"أونصة الذهب", price:"$4,519"},
-{type:"gold", name:"كيلو الذهب", price:"$145,284"},
-{type:"gold", name:"أونصة فضة", price:"$71"},
-{type:"gold", name:"كيلو فضة", price:"$2,273"}
-
-];
-
-function render() {
-let html = "";
-
-data.forEach(item => {
-let priceClass = item.type === "usd" ? "price-red" : "price-gold";
-
-html += `
-<div class="card">
-<div class="arrow">▼</div>
-
-<div class="${priceClass}">
-${item.price}
-</div>
-
-<div>${item.type === "usd" ? "100$" : "1 مثقال"}</div>
-
-<div class="city">
-<span>${item.name}</span>
-${item.type === "usd" ? '<img class="flag" src="https://flagcdn.com/w40/iq.png">' : ""}
-</div>
-</div>
-`;
-});
-
-document.getElementById("list").innerHTML = html;
-}
-
-render();
-
-</script>
-
-</body>
-</html> color: white;
- padding: 8px 15px;
- border-radius: 12px;
- font-weight: bold;
-}
-
-.city {
- display: flex;
- align-items: center;
- gap: 10px;
-}
-
-.flag {
- width: 25px;
-}
-
-/* Button */
-button {
- width: 100%;
- padding: 12px;
- border: none;
- background: #2563eb;
- color: white;
- border-radius: 10px;
- cursor: pointer;
- margin-top: 10px;
-}
-
-/* Bottom Nav */
-.bottom-nav {
- position: fixed;
- bottom: 0;
- width: 100%;
- background: #4f46e5;
- display: flex;
- justify-content: space-around;
- padding: 10px 0;
- color: white;
-}
-
-.nav-item {
- text-align: center;
- font-size: 14px;
- opacity: 0.7;
- cursor: pointer;
-}
-
-.nav-item.active {
- opacity: 1;
- font-weight: bold;
-}
-
-/* Converter */
-.converter {
- background: white;
- padding: 15px;
- border-radius: 15px;
-}
-
-input {
- width: 100%;
- padding: 10px;
- margin: 10px 0;
-}
-</style>
-
-</head>
-
-<body>
-
-<div class="container">
-
- <!-- USD -->
- <div id="usd">
- <h2> USD Prices</h2>
- <div id="usdList"></div>
- <button onclick="updateUSD()"> Update Prices</button>
- </div>
-
- <!-- GOLD -->
- <div id="gold" style="display:none;">
- <h2> Gold Prices</h2>
-
- <div class="card">
- <div class="price-box">95,000 IQD</div>
- <div>18K</div>
- </div>
-
- <div class="card">
- <div class="price-box">110,000 IQD</div>
- <div>21K</div>
- </div>
-
- <div class="card">
- <div class="price-box">125,000 IQD</div>
- <div>24K</div>
- </div>
- </div>
-
- <!-- EXCHANGE -->
- <div id="exchange" style="display:none;">
- <h2> Exchange</h2>
-
- <div class="converter">
- <input type="number" id="amount" placeholder="Enter USD amount">
- <button onclick="convert()">Convert</button>
- <p id="result"></p>
- </div>
- </div>
-
-</div>
-
-<!-- Bottom Navigation -->
-<div class="bottom-nav">
- <div class="nav-item active" onclick="showTab('usd', this)"> <br>USD</div>
- <div class="nav-item" onclick="showTab('gold', this)"> <br>Gold</div>
- <div class="nav-item" onclick="showTab('exchange', this)"> <br>Exchange</div>
-</div>
-
-<script>
-
-let usdData = [
- {city: "Baghdad", price: 155354},
- {city: "Basra", price: 155820},
- {city: "Erbil", price: 155412},
- {city: "Kirkuk", price: 156283},
- {city: "Sulaymaniyah", price: 155266},
- {city: "Duhok", price: 156198},
-];
-
-function renderUSD() {
- let html = "";
- usdData.forEach(item => {
- html += `
- <div class="card">
- <div class="price-box">${item.price.toLocaleString()} IQD</div>
- <div>100$</div>
- <div class="city">
- <span>${item.city}</span>
- <img class="flag" src="https://flagcdn.com/w40/iq.png">
- </div>
- </div>
- `;
- });
- document.getElementById("usdList").innerHTML = html;
-}
-
-function updateUSD() {
- usdData.forEach(item => {
- item.price += Math.floor(Math.random() * 300 - 150);
- });
- renderUSD();
-}
-
-function convert() {
- let amount = document.getElementById("amount").value;
- let rate = 155000;
- let result = amount * rate / 100;
- document.getElementById("result").innerText =
- "≈ " + result.toLocaleString() + " IQD";
-}
-
-function showTab(tab, el) {
- document.getElementById("usd").style.display = "none";
- document.getElementById("gold").style.display = "none";
- document.getElementById("exchange").style.display = "none";
-
- document.getElementById(tab).style.display = "block";
-
- document.querySelectorAll(".nav-item").forEach(i => i.classList.remove("active"));
- el.classList.add("active");
-}
-
-renderUSD();
-
-</script>
-
-</body>
-</html> padding: 15px;
- border-radius: 15px;
- box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-}
-
-input {
- width: 100%;
- padding: 10px;
- margin: 10px 0;
-}
-</style>
-
-</head>
-
-<body>
-
-<div class="nav">
- <div class="tabs">
- <div class="tab active" onclick="showTab('usd')"> الدولار</div>
- <div class="tab" onclick="showTab('gold')"> الذهب</div>
- <div class="tab" onclick="showTab('exchange')"> الصرافة</div>
- </div>
-</div>
-
-<div class="container">
-
- <!-- الدولار -->
- <div id="usd">
- <h2>سعر الدولار</h2>
- <div id="usdList"></div>
- <button onclick="updateUSD()"> تحديث الأسعار</button>
- </div>
-
- <!-- الذهب -->
- <div id="gold" style="display:none;">
- <h2>سعر الذهب</h2>
-
- <div class="card">
- <div class="price-box">95,000 د.ع</div>
- <div>عيار 18</div>
- </div>
-
- <div class="card">
- <div class="price-box">110,000 د.ع</div>
- <div>عيار 21</div>
- </div>
-
- <div class="card">
- <div class="price-box">125,000 د.ع</div>
- <div>عيار 24</div>
- </div>
- </div>
-
- <!-- الصرافة -->
- <div id="exchange" style="display:none;">
- <h2>تحويل العملات</h2>
-
- <div class="converter">
- <input type="number" id="amount" placeholder="ادخل المبلغ بالدولار">
- <button onclick="convert()">تحويل</button>
- <p id="result"></p>
- </div>
- </div>
-
-</div>
-
-<script>
-
-let usdData = [
- {city: "بغداد", price: 155354},
- {city: "البصرة", price: 155820},
- {city: "أربيل", price: 155412},
- {city: "كركوك", price: 156283},
- {city: "السليمانية", price: 155266},
- {city: "دهوك", price: 156198},
-];
-
-function renderUSD() {
- let html = "";
- usdData.forEach(item => {
- html += `
- <div class="card">
- <div class="price-box">${item.price.toLocaleString()} د.ع</div>
- <div>100$</div>
- <div class="city">
- <span>${item.city}</span>
- <img class="flag" src="https://flagcdn.com/w40/iq.png">
- </div>
- </div>
- `;
- });
-
- document.getElementById("usdList").innerHTML = html;
-}
-
-function updateUSD() {
- usdData.forEach(item => {
- item.price += Math.floor(Math.random() * 300 - 150);
- });
- renderUSD();
-}
-
-function convert() {
- let amount = document.getElementById("amount").value;
- let rate = 155000;
- let result = amount * rate / 100;
- document.getElementById("result").innerText =
- "≈ " + result.toLocaleString() + " د.ع";
-}
-
-/* Tabs */
-function showTab(tab) {
- document.getElementById("usd").style.display = "none";
- document.getElementById("gold").style.display = "none";
- document.getElementById("exchange").style.display = "none";
-
- document.getElementById(tab).style.display = "block";
-
- document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
- event.target.classList.add("active");
-}
-
-renderUSD();
-
-</script>
-
-</body>
-</html> color: white;
- padding: 10px 15px;
- border-radius: 12px;
- font-weight: bold;
-}
-
-.city {
- display: flex;
- align-items: center;
- gap: 10px;
-}
-
-.flag {
- width: 25px;
-}
-
-.arrow {
- color: #6b7280;
- font-size: 18px;
-}
-
-.update {
- text-align: center;
- margin: 15px 0;
- color: #555;
-}
-
-button {
- width: 100%;
- padding: 10px;
- border: none;
- background: #2563eb;
- color: white;
- border-radius: 10px;
- cursor: pointer;
- font-size: 16px;
-}
-
-button:hover {
- background: #1e40af;
-}
-</style>
-
-</head>
-
-<body>
-
-<div class="container">
- <h1> سعر الدولار في العراق</h1>
-
- <div class="update" id="time">آخر تحديث الآن</div>
-
- <div id="list"></div>
-
- <button onclick="updatePrices()"> تحديث الأسعار</button>
-</div>
-
-<script>
-
-let data = [
- {city: "بغداد", price: 155450, flag: "https://flagcdn.com/w40/iq.png"},
- {city: "البصرة", price: 155500, flag: "https://flagcdn.com/w40/iq.png"},
- {city: "أربيل", price: 155600, flag: "https://flagcdn.com/w40/iq.png"},
- {city: "كركوك", price: 155700, flag: "https://flagcdn.com/w40/iq.png"},
- {city: "السليمانية", price: 155650, flag: "https://flagcdn.com/w40/iq.png"},
- {city: "دهوك", price: 155600, flag: "https://flagcdn.com/w40/iq.png"},
-];
-
-function render() {
- let html = "";
- data.forEach(item => {
- html += `
- <div class="card">
- <div class="arrow">▼</div>
-
- <div class="price-box">
- ${item.price.toLocaleString()} د.ع
- </div>
-
- <div>100$</div>
-
- <div class="city">
- <span>${item.city}</span>
- <img class="flag" src="${item.flag}">
- </div>
- </div>
- `;
- });
-
- document.getElementById("list").innerHTML = html;
-}
-
-function updatePrices() {
- data.forEach(item => {
- item.price += Math.floor(Math.random() * 200 - 100);
- });
-
- render();
-
- let now = new Date();
- document.getElementById("time").innerText =
- "آخر تحديث: " + now.toLocaleTimeString();
-}
-
-render();
-
-</script>
-
-</body>
-</html>>
-<a class="nav-item" href="#"><i class="fa-solid fa-calculator"></i>حاسبة</a>
-</div>
+    </script>
 </body>
 </html>
