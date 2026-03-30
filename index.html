@@ -2,11 +2,13 @@
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>أسعار الدولار والذهب في العراق</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>أسعار الدولار والذهب</title>
+
 <style>
 body {
  margin: 0;
- font-family: "Tahoma";
+ font-family: Tahoma;
  background: #f3f4f6;
  direction: rtl;
 }
@@ -21,66 +23,52 @@ h1 {
  text-align: center;
 }
 
-/* عنوان القسم */
-.section-title {
- background: #fff;
- padding: 12px;
- border-radius: 12px;
- margin: 15px 0 10px;
- cursor: pointer;
- display: flex;
- justify-content: space-between;
- box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-}
-
-/* حركة */.section-content {
- overflow: hidden;
- transition: 0.3s;
-}
-
 /* Card */
 .card {
- background: #fff;
- border-radius: 18px;
+ background: white;
+ border-radius: 15px;
  padding: 15px;
- margin-bottom: 12px;
+ margin-bottom: 10px;
  display: flex;
  justify-content: space-between;
  align-items: center;
- box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+ box-shadow: 0 5px 15px rgba(0,0,0,0.08);
 }
 
 .price-red {
  background: #ff5a5a;
  color: white;
- padding: 10px 16px;
- border-radius: 12px;
- font-weight: bold;
+ padding: 8px 14px;
+ border-radius: 10px;
 }
 
 .price-gold {
  background: #fbbf24;
- color: black;
- padding: 10px 16px;
- border-radius: 12px;
- font-weight: bold;
+ padding: 8px 14px;
+ border-radius: 10px;
 }
 
-.city {
- display: flex;
- align-items: center;
- gap: 8px;
+/* Buttons */
+button, .toggle {
+ width: 100%;
+ padding: 12px;
+ border: none;
+ border-radius: 10px;
+ margin: 10px 0;
+ text-align: center;
+ cursor: pointer;
 }
 
-.flag {
- width: 24px;
+button {
+ background: #2563eb;
+ color: white;
 }
 
-.arrow {
- color: #6b7280;
+.toggle {
+ background: white;
+ box-shadow: 0 4px 10px rgba(0,0,0,0.08);
 }
 </style>
-
 </head>
 
 <body>
@@ -90,86 +78,79 @@ h1 {
 <h1> أسعار الدولار والذهب</h1>
 
 <!-- الدولار -->
-<div class="section-title" onclick="toggle('usd')">
- <span> سعر الدولار</span>
- <span>▼</span>
-</div>
-<div id="usd" class="section-content"></div>
+<div id="usd"></div>
+
+<button onclick="update()"> تحديث الأسعار</button>
+
+<!-- زر الذهب -->
+<div class="toggle" onclick="showGold()"> عرض أسعار الذهب ▼</div>
 
 <!-- الذهب -->
-<div class="section-title" onclick="toggle('gold')">
- <span> سعر الذهب</span>
- <span>▼</span>
-</div>
-<div id="gold" class="section-content"></div>
+<div id="gold" style="display:none;"></div>
 
 </div>
 
 <script>
 
-// الدولارlet usdData = [
- {name:"بغداد", price:"155,354 د.ع"},
- {name:"البصرة", price:"155,820 د.ع"},
- {name:"أربيل", price:"155,412 د.ع"},
- {name:"كركوك", price:"156,283 د.ع"},
- {name:"السليمانية", price:"155,266 د.ع"},
- {name:"دهوك", price:"156,198 د.ع"},
+// الدولارlet usd = [
+ ["بغداد",155354],
+ ["البصرة",155820],
+ ["أربيل",155412],
+ ["كركوك",156283], ["السليمانية",155266], ["دهوك",156198],
 ];
 
-// الذهبlet goldData = [
- {name:"الذهب عيار 24", price:"1,135,000 د.ع"},
- {name:"الذهب عيار 22", price:"1,040,000 د.ع"},
- {name:"الذهب عيار 21", price:"994,000 د.ع"},
- {name:"الذهب عيار 18", price:"853,000 د.ع"},
- {name:"أونصة الذهب", price:"$4,519"},
- {name:"كيلو الذهب", price:"$145,284"},
- {name:"أونصة فضة", price:"$71"},
- {name:"كيلو فضة", price:"$2,273"},
+// الذهبlet gold = [
+ ["عيار 24","1,135,000"],
+ ["عيار 22","1,040,000"],
+ ["عيار 21","994,000"],
+ ["عيار 18","853,000"],
 ];
 
-// رسم الدولارfunction renderUSD() {
+// عرض الدولارfunction renderUSD() {
  let html = "";
- usdData.forEach(item => {
+ usd.forEach(x => {
  html += `
  <div class="card">
- <div class="arrow">▼</div>
- <div class="price-red">${item.price}</div>
+ <div class="price-red">${x[1].toLocaleString()} د.ع</div>
  <div>100$</div>
- <div class="city">
- <span>${item.name}</span>
- <img class="flag" src="https://flagcdn.com/w40/iq.png">
- </div>
- </div>
- `;
+ <div>${x[0]}</div>
+ </div>`;
  });
  document.getElementById("usd").innerHTML = html;
 }
 
-// رسم الذهبfunction renderGold() {
+// عرض الذهبfunction renderGold() {
  let html = "";
- goldData.forEach(item => {
+ gold.forEach(x => {
  html += `
  <div class="card">
- <div class="arrow">▼</div>
- <div class="price-gold">${item.price}</div>
+ <div class="price-gold">${x[1]} د.ع</div>
  <div>1 مثقال</div>
- <div class="city">
- <span>${item.name}</span>
- </div>
- </div>
- `;
+ <div>${x[0]}</div>
+ </div>`;
  });
  document.getElementById("gold").innerHTML = html;
 }
 
-// فتح / غلق
-function toggle(id) {
- let el = document.getElementById(id);
- el.style.display = el.style.display === "none" ? "block" : "none";
+// زر الذهبfunction showGold() {
+ let g = document.getElementById("gold");
+
+ if (g.style.display === "none") {
+ renderGold(); // هذا المهم 
+ g.style.display = "block";
+ } else {
+ g.style.display = "none";
+ }
 }
 
-// تحميلrenderUSD();
-renderGold();
+// تحديثfunction update() {
+ usd.forEach(x => {
+ x[1] += Math.floor(Math.random()*300-150);
+ });
+ renderUSD();
+}
+
+// تشغيل أوليrenderUSD();
 
 </script>
 
