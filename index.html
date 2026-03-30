@@ -1,40 +1,52 @@
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
 <head>
- <meta charset="UTF-8">
- <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>بورصة العراق | تحديث لحظي</title> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
- <style>
- :root { --gold: #ffcc00; --bg: #050505; --card: #121212; --green: #00ffa3; }
- body { background: var(--bg); color: #fff; font-family: sans-serif; margin: 0; padding-bottom: 50px; }
- .news-ticker { background: #1a1a1a; color: var(--gold); padding: 10px; font-size: 0.85rem; text-align: center; border-bottom: 1px solid #333; }
- .header { padding: 25px; text-align: center; color: var(--gold); font-size: 1.6rem; font-weight: bold; }
- .container { padding: 0 15px; max-width: 450px; margin: auto; }
- .card { background: var(--card); border-radius: 20px; padding: 20px; margin-bottom: 15px; border: 1px solid #222; }
- .price-val { font-size: 2.3rem; font-weight: bold; display: block; margin: 10px 0; }
- .calc-box { background: #000; border-radius: 15px; padding: 15px; margin-top: 10px; border: 1px solid #333; }
- input { background: #111; border: 1px solid #444; color: #fff; padding: 12px; width: 100%; border-radius: 10px; text-align: center; font-size: 1.1rem; box-sizing: border-box; outline: none; }
- .res-text { text-align: center; margin-top: 12px; color: var(--green); font-weight: bold; }
- 
- /* الزر الأصفر الفخم */
- .toggle-btn { background: var(--gold); color: #000; width: 100%; padding: 18px; border: none; border-radius: 15px; font-weight: bold; font-size: 1.1rem; cursor: pointer; margin-top: 10px; display: block; box-shadow: 0 4px 15px rgba(255,204,0,0.2); }
- /* القسم المخفي - سويتله حركة انسيابية */ #goldSection { display: none; margin-top: 15px; animation: fadeIn 0.5s ease; }
- @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
- 
- .city-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #222; }
- </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>بورصة العراق | v4</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+:root { --gold: #ffcc00; --bg: #050505; --card: #121212; --green: #00ffa3; }
+body { background: var(--bg); color: #fff; font-family: sans-serif; margin: 0; text-align: center; }
+.container { padding: 20px; max-width: 450px; margin: auto; }
+.card { background: var(--card); border-radius: 20px; padding: 20px; margin-bottom: 15px; border: 1px solid #222; }
+.price-val { font-size: 2.3rem; font-weight: bold; color: #fff; display: block; margin: 15px 0; }
+.calc-box input { background: #111; border: 1px solid #444; color: #fff; padding: 12px; width: 100%; border-radius: 10px; text-align: center; box-sizing: border-box; }
+/* الزر الجديد بطريقة "التفاصيل" - يشتغل باللمس بدون برمجة معقدة */
+details summary { background: var(--gold); color: #000; padding: 15px; border-radius: 15px; list-style: none; font-weight: bold; cursor: pointer; }
+details[open] summary { display: none; } /* يختفي الزر بعد الفتح */
+</style>
 </head>
 <body>
 
-<div class="news-ticker"> تحديث لحظي: الأسعار مستقرة حالياً في بورصات العراق</div><div class="header"> أسعار الدولار والذهب</div>
-
 <div class="container">
- <div class="card">
- <div style="color:#888; display:flex; justify-content:space-between;">
- <span>بغداد (الكفاح)</span>
- <span style="color:var(--green)">● مباشر</span>
- </div>
- <span class="price-val">150,250 <small style="font-size:0.5em; color:var(--green)">د.ع</small></span>
- 
+<h2 style="color:var(--gold)">💰 تحديث v4 المباشر</h2>
+
+<div class="card">
+<div style="color:#888">سعر الـ 100$ (الآن)</div>
+<span class="price-val">150,250 <small style="color:var(--green); font-size:15px;">د.ع</small></span>
+
+<div class="calc-box">
+<input type="number" id="uIn" placeholder="اكتب المبلغ هنا $" oninput="document.getElementById('res').innerText = (this.value * 1502.5).toLocaleString() + ' دينار'">
+<div id="res" style="margin-top:15px; color:var(--green); font-weight:bold;">0 دينار</div>
+</div>
+</div>
+
+<details>
+<summary>اضغط هنا لعرض الذهب والمحافظات 👇</summary>
+<div class="card" style="margin-top:15px; border-right: 5px solid var(--gold);">
+<div style="color:#888">أسعار الذهب</div>
+<span class="price-val" style="color:var(--gold)">485,000 <small>د.ع</small></span>
+</div>
+<div class="card">
+<p>أربيل: <span style="color:var(--green)">150,400</span></p>
+<p>البصرة: <span style="color:var(--green)">150,300</span></p>
+</div>
+</details>
+</div>
+
+</body>
+</html> 
  <div class="calc-box">
  <input type="number" id="usdInput" placeholder="ادخل مبلغ الـ $ لتحويله" oninput="convert()">
  <div class="res-text" id="iqdResult">0 دينار عراقي</div>
