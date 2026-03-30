@@ -4,91 +4,67 @@
  <meta charset="UTF-8">
  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>بورصة العراق | تحديث لحظي</title> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
  <style>
- :root { --gold: #ffcc00; --bg: #050505; --card: #121212; --green: #00ffa3; --red: #ff4d4d; }
- body { background: var(--bg); color: #fff; font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; padding-bottom: 50px; }
- 
- /* شريط التنبيه العلوي */
+ :root { --gold: #ffcc00; --bg: #050505; --card: #121212; --green: #00ffa3; }
+ body { background: var(--bg); color: #fff; font-family: sans-serif; margin: 0; padding-bottom: 50px; }
  .news-ticker { background: #1a1a1a; color: var(--gold); padding: 10px; font-size: 0.85rem; text-align: center; border-bottom: 1px solid #333; }
-
- .header { padding: 25px; text-align: center; background: linear-gradient(to bottom, #111, var(--bg)); }
- .header h1 { margin: 0; font-size: 1.6rem; color: var(--gold); }
-
+ .header { padding: 25px; text-align: center; color: var(--gold); font-size: 1.6rem; font-weight: bold; }
  .container { padding: 0 15px; max-width: 450px; margin: auto; }
-
- /* كارت الدولار (يظهر دائماً) */
- .card { background: var(--card); border-radius: 20px; padding: 20px; margin-bottom: 15px; border: 1px solid #222; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
- .card-header { color: #888; font-size: 0.9rem; display: flex; justify-content: space-between; align-items: center; }
- .price-val { font-size: 2.3rem; font-weight: bold; color: #fff; display: block; margin: 10px 0; }
- .price-val small { font-size: 0.5em; color: var(--green); margin-right: 5px; }
-
- /* الحاسبة */
+ .card { background: var(--card); border-radius: 20px; padding: 20px; margin-bottom: 15px; border: 1px solid #222; }
+ .price-val { font-size: 2.3rem; font-weight: bold; display: block; margin: 10px 0; }
  .calc-box { background: #000; border-radius: 15px; padding: 15px; margin-top: 10px; border: 1px solid #333; }
  input { background: #111; border: 1px solid #444; color: #fff; padding: 12px; width: 100%; border-radius: 10px; text-align: center; font-size: 1.1rem; box-sizing: border-box; outline: none; }
  .res-text { text-align: center; margin-top: 12px; color: var(--green); font-weight: bold; }
-
- /* زر الذهب والأسعار المخفية */
- .toggle-btn { background: var(--gold); color: #000; width: 100%; padding: 15px; border: none; border-radius: 15px; font-weight: bold; font-size: 1rem; cursor: pointer; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; }
- .gold-section { display: none; margin-top: 15px; } /* مخفي افتراضياً */
-
- .city-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #222; font-size: 0.95rem; }
- .city-price { color: var(--green); font-weight: bold; }
+ 
+ /* الزر الأصفر */
+ .toggle-btn { background: var(--gold); color: #000; width: 100%; padding: 15px; border: none; border-radius: 15px; font-weight: bold; font-size: 1rem; cursor: pointer; margin-top: 10px; display: block; }
+ 
+ /* القسم المخفي */
+ #goldSection { display: none; margin-top: 15px; }
+ .city-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #222; }
  </style>
 </head>
 <body>
 
-<div class="news-ticker"> <i class="fas fa-bolt"></i> تحديث لحظي: الأسعار مستقرة حالياً في بورصات العراق</div>
-
-<div class="header">
- <h1><i class="fas fa-wallet"></i> أسعار الدولار والذهب</h1>
-</div>
+<div class="news-ticker"> تحديث لحظي: الأسعار مستقرة حالياً في بورصات العراق</div><div class="header"> أسعار الدولار والذهب</div>
 
 <div class="container">
  <div class="card">
- <div class="card-header">
+ <div style="color:#888; display:flex; justify-content:space-between;">
  <span>بغداد (الكفاح)</span>
- <span style="color: var(--green); font-size: 0.8rem;"><i class="fas fa-circle" style="font-size: 0.6rem;"></i> مباشر</span>
+ <span style="color:var(--green)">● مباشر</span>
  </div>
- <span class="price-val">150,250 <small>د.ع</small></span>
- 
+ <span class="price-val">150,250 <small style="font-size:0.5em; color:var(--green)">د.ع</small></span>
  <div class="calc-box">
- <input type="number" id="usdInput" placeholder="أدخل مبلغ الـ $ لتحويله" oninput="convert()">
+ <input type="number" id="usdInput" placeholder="ادخل مبلغ الـ $ لتحويله" oninput="convert()">
  <div class="res-text" id="iqdResult">0 دينار عراقي</div>
  </div>
  </div>
 
- <button class="toggle-btn" onclick="toggleGold()">
- <i class="fas fa-coins"></i> عرض أسعار الذهب والمحافظات
- </button>
+ <button class="toggle-btn" onclick="toggleGold()">عرض أسعار الذهب والمحافظات</button>
 
- <div id="goldSection" class="gold-section">
+ <div id="goldSection">
  <div class="card" style="border-right: 4px solid var(--gold);">
- <div class="card-header">أسعار الذهب (مثقال عيار 21)</div>
- <span class="price-val" style="color: var(--gold);">485,000 <small>د.ع</small></span>
+ <div style="color:#888">أسعار الذهب (عيار 21)</div>
+ <span class="price-val" style="color:var(--gold)">485,000 <small>د.ع</small></span>
  </div>
-
  <div class="card">
- <div class="card-header">أسعار المحافظات (100$)</div>
- <div class="city-row"><span>أربيل</span> <span class="city-price">150,400</span></div>
- <div class="city-row"><span>البصرة</span> <span class="city-price">150,300</span></div>
- <div class="city-row"><span>السليمانية</span> <span class="city-price">150,450</span></div>
+ <div class="city-row"><span>أربيل</span> <span style="color:var(--green)">150,400</span></div>
+ <div class="city-row"><span>البصرة</span> <span style="color:var(--green)">150,300</span></div>
  </div>
  </div>
 </div>
 
 <script> // وظيفة الحاسبة function convert() {
  let usd = document.getElementById('usdInput').value;
- let rate = 1502.50; 
- let result = usd * rate;
- document.getElementById('iqdResult').innerText = result.toLocaleString() + " دينار عراقي";
+ document.getElementById('iqdResult').innerText = (usd * 1502.5).toLocaleString() + " دينار عراقي";
  }
 
- // وظيفة إظهار وإخفاء قسم الذهب function toggleGold() {
+ // وظيفة الزر (تعديل بسيط ليضمن العمل) function toggleGold() {
  var x = document.getElementById("goldSection");
  if (x.style.display === "block") {
  x.style.display = "none";
  } else {
  x.style.display = "block";
- window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
  }
  }
 </script>
