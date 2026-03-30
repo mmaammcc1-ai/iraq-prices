@@ -15,11 +15,11 @@
  input { background: #111; border: 1px solid #444; color: #fff; padding: 12px; width: 100%; border-radius: 10px; text-align: center; font-size: 1.1rem; box-sizing: border-box; outline: none; }
  .res-text { text-align: center; margin-top: 12px; color: var(--green); font-weight: bold; }
  
- /* الزر الأصفر */
- .toggle-btn { background: var(--gold); color: #000; width: 100%; padding: 15px; border: none; border-radius: 15px; font-weight: bold; font-size: 1rem; cursor: pointer; margin-top: 10px; display: block; }
+ /* الزر الأصفر الفخم */
+ .toggle-btn { background: var(--gold); color: #000; width: 100%; padding: 18px; border: none; border-radius: 15px; font-weight: bold; font-size: 1.1rem; cursor: pointer; margin-top: 10px; display: block; box-shadow: 0 4px 15px rgba(255,204,0,0.2); }
+ /* القسم المخفي - سويتله حركة انسيابية */ #goldSection { display: none; margin-top: 15px; animation: fadeIn 0.5s ease; }
+ @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
  
- /* القسم المخفي */
- #goldSection { display: none; margin-top: 15px; }
  .city-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #222; }
  </style>
 </head>
@@ -34,7 +34,46 @@
  <span style="color:var(--green)">● مباشر</span>
  </div>
  <span class="price-val">150,250 <small style="font-size:0.5em; color:var(--green)">د.ع</small></span>
+ 
  <div class="calc-box">
+ <input type="number" id="usdInput" placeholder="ادخل مبلغ الـ $ لتحويله" oninput="convert()">
+ <div class="res-text" id="iqdResult">0 دينار عراقي</div>
+ </div>
+ </div>
+
+ <button id="showBtn" class="toggle-btn" onclick="showGold()">عرض أسعار الذهب والمحافظات</button>
+
+ <div id="goldSection">
+ <div class="card" style="border-right: 4px solid var(--gold);">
+ <div style="color:#888">أسعار الذهب (عيار 21)</div>
+ <span class="price-val" style="color:var(--gold)">485,000 <small>د.ع</small></span>
+ </div>
+ 
+ <div class="card">
+ <div style="color:#888; margin-bottom:10px;">أسعار المحافظات (100$)</div>
+ <div class="city-row"><span>أربيل</span> <span style="color:var(--green)">150,400</span></div>
+ <div class="city-row"><span>البصرة</span> <span style="color:var(--green)">150,300</span></div>
+ <div class="city-row"><span>السليمانية</span> <span style="color:var(--green)">150,450</span></div>
+ </div>
+ </div>
+</div>
+
+<script> // كود الحاسبة function convert() {
+ let usd = document.getElementById('usdInput').value;
+ let rate = 1502.50;
+ let total = usd * rate;
+ document.getElementById('iqdResult').innerText = total.toLocaleString() + " دينار عراقي";
+ }
+
+ // كود إظهار الذهب (طريقة مباشرة ومضمونة) function showGold() {
+ document.getElementById('goldSection').style.display = 'block';
+ document.getElementById('showBtn').style.display = 'none'; // يختفي الزر بعد الضغط
+ window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+ }
+</script>
+
+</body>
+</html> <div class="calc-box">
  <input type="number" id="usdInput" placeholder="ادخل مبلغ الـ $ لتحويله" oninput="convert()">
  <div class="res-text" id="iqdResult">0 دينار عراقي</div>
  </div>
