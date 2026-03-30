@@ -1,33 +1,149 @@
 <!DOCTYPE html>
-<html dir="rtl" lang="ar">
+<html lang="ar">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>أسعار العراق | تحديث لحظي</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>سعر الدولار في العراق اليوم</title>
 <style>
-body { background:#000; color:#fff; font-family:sans-serif; margin:0; padding-bottom:80px; }
-.header { background:#111; padding:20px; text-align:center; border-bottom:2px solid #ffd700; color:#ffd700; font-size:1.4em; }
-.card { background:#1a1a1a; margin:15px; padding:20px; border-radius:15px; border-right:6px solid #4caf50; }
-.price { font-size:2em; font-weight:bold; display:block; margin-top:5px; }
-.navbar { position:fixed; bottom:0; width:100%; background:#2c3e50; display:flex; justify-content:space-around; padding:12px 0; border-top:1px solid #444; }
-.nav-item { color:#fff; text-decoration:none; text-align:center; font-size:0.8em; flex:1; }
-.nav-item i { display:block; font-size:1.5em; margin-bottom:4px; }
+body {
+ margin: 0;
+ font-family: Arial, sans-serif;
+ background: #f3f4f6;
+ direction: rtl;
+}
+
+.container {
+ max-width: 600px;
+ margin: auto;
+ padding: 20px;
+}
+
+h1 {
+ text-align: center;
+}
+
+.card {
+ background: #fff;
+ border-radius: 15px;
+ padding: 15px;
+ margin-bottom: 15px;
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.price-box {
+ background: #ff5a5a;
+ color: white;
+ padding: 10px 15px;
+ border-radius: 12px;
+ font-weight: bold;
+}
+
+.city {
+ display: flex;
+ align-items: center;
+ gap: 10px;
+}
+
+.flag {
+ width: 25px;
+}
+
+.arrow {
+ color: #6b7280;
+ font-size: 18px;
+}
+
+.update {
+ text-align: center;
+ margin: 15px 0;
+ color: #555;
+}
+
+button {
+ width: 100%;
+ padding: 10px;
+ border: none;
+ background: #2563eb;
+ color: white;
+ border-radius: 10px;
+ cursor: pointer;
+ font-size: 16px;
+}
+
+button:hover {
+ background: #1e40af;
+}
 </style>
+
 </head>
+
 <body>
-<div class="header">🇮🇶 أسعار العراق اللحظية</div>
-<div class="card">
-<div style="color:#888">سعر الـ $100 (بغداد)</div>
-<span class="price">150,250 <small style="font-size:0.5em">دينار</small></span>
+
+<div class="container">
+ <h1> سعر الدولار في العراق</h1>
+
+ <div class="update" id="time">آخر تحديث الآن</div>
+
+ <div id="list"></div>
+
+ <button onclick="updatePrices()"> تحديث الأسعار</button>
 </div>
-<div class="card" style="border-right-color:#ffd700">
-<div style="color:#888">مثقال الذهب عيار 21</div>
-<span class="price">485,000 <small style="font-size:0.5em">دينار</small></span>
-</div>
-<div class="navbar">
-<a class="nav-item" href="#"><i class="fa-solid fa-house"></i>الرئيسية</a>
-<a class="nav-item" href="#"><i class="fa-solid fa-coins"></i>الذهب</a>
+
+<script>
+
+let data = [
+ {city: "بغداد", price: 155450, flag: "https://flagcdn.com/w40/iq.png"},
+ {city: "البصرة", price: 155500, flag: "https://flagcdn.com/w40/iq.png"},
+ {city: "أربيل", price: 155600, flag: "https://flagcdn.com/w40/iq.png"},
+ {city: "كركوك", price: 155700, flag: "https://flagcdn.com/w40/iq.png"},
+ {city: "السليمانية", price: 155650, flag: "https://flagcdn.com/w40/iq.png"},
+ {city: "دهوك", price: 155600, flag: "https://flagcdn.com/w40/iq.png"},
+];
+
+function render() {
+ let html = "";
+ data.forEach(item => {
+ html += `
+ <div class="card">
+ <div class="arrow">▼</div>
+
+ <div class="price-box">
+ ${item.price.toLocaleString()} د.ع
+ </div>
+
+ <div>100$</div>
+
+ <div class="city">
+ <span>${item.city}</span>
+ <img class="flag" src="${item.flag}">
+ </div>
+ </div>
+ `;
+ });
+
+ document.getElementById("list").innerHTML = html;
+}
+
+function updatePrices() {
+ data.forEach(item => {
+ item.price += Math.floor(Math.random() * 200 - 100);
+ });
+
+ render();
+
+ let now = new Date();
+ document.getElementById("time").innerText =
+ "آخر تحديث: " + now.toLocaleTimeString();
+}
+
+render();
+
+</script>
+
+</body>
+</html>>
 <a class="nav-item" href="#"><i class="fa-solid fa-calculator"></i>حاسبة</a>
 </div>
 </body>
